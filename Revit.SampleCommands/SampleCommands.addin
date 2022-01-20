@@ -3,7 +3,7 @@
     <AddIn Type="Application">
         <Name>Sample Commands</Name>
         <Assembly>Revit.SampleCommands.dll</Assembly>
-        <AddInId>709D5D78-A921-4F25-95E2-8CE2F7E653CF</AddInId>
+        <AddInId>BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB</AddInId>
         <FullClassName>Revit.SampleCommands.App</FullClassName>
         <VendorId>Coolicky</VendorId>
         <VendorDescription>Coolicky</VendorDescription>

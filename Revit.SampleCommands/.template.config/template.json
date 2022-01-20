@@ -1,0 +1,17 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Coolicky",
+  "classifications": [ "Revit", "Class Library", "C#7.3" ],
+  "identity": "Revit.DependencyInjection.Unity.TemplateProject",
+  "name": "Revit Sample Project with Dependency Injection with Unity",
+  "shortName": "revitDI",
+  "tags": {
+    "type": "project",
+    "language": "C#",
+    "platform": ".NET"
+  },
+  "guids": [
+    "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA",
+    "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"
+  ]
+}

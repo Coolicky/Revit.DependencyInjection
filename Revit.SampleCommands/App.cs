@@ -11,7 +11,7 @@ using Unity;
 
 namespace Revit.SampleCommands
 {
-    [ContainerProvider("EE9FD955-E885-4E9C-87D0-A77F2F6585A9")]
+    [ContainerProvider("AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")]
     public class App : RevitApp
     {
         public override void OnCreateRibbon(IRibbonManager ribbonManager)
