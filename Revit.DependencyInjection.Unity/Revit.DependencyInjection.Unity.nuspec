@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+    <metadata>
+        <id>Revit.DependencyInjection.Unity</id>
+        <version>0.5.2</version>
+        <title>Revit Dependency Injection</title>
+        <authors>Coolicky</authors>
+        <owners>Coolicky</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <license type="expression">MIT</license>
+        <icon>Revit.png</icon>
+        <projectUrl>https://github.com/Coolicky/Revit.DependencyInjection</projectUrl>
+        <description>Revit Dependency Injection Framework With Unity Container. Based on the excelent Onbox Framework.</description>
+        <releaseNotes>Initial</releaseNotes>
+        <copyright>Copyright ©  2022</copyright>
+        <tags>RevitApi C# .Net Unity</tags>
+    </metadata>
+    <files>
+        <file src="Images\Revit.png" target="\"/>
+    </files>
+</package>
