@@ -1,7 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace Revit.SampleCommands.Commands.Availability
+namespace Revit.DependencyInjection.Unity.Template.Commands.Availability
 {
     /// <summary>
     /// The Command will be available even if no Revit Document is opened

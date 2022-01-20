@@ -2,14 +2,14 @@
 using Revit.DependencyInjection.Unity.Applications;
 using Revit.DependencyInjection.Unity.Async;
 using Revit.DependencyInjection.Unity.Base;
+using Revit.DependencyInjection.Unity.Template.Commands.Availability;
+using Revit.DependencyInjection.Unity.Template.Commands.HelloWorld;
+using Revit.DependencyInjection.Unity.Template.Commands.SampleInjection;
+using Revit.DependencyInjection.Unity.Template.Commands.SampleViews;
 using Revit.DependencyInjection.Unity.UI;
-using Revit.SampleCommands.Commands.Availability;
-using Revit.SampleCommands.Commands.HelloWorld;
-using Revit.SampleCommands.Commands.SampleInjection;
-using Revit.SampleCommands.Commands.SampleViews;
 using Unity;
 
-namespace Revit.SampleCommands
+namespace Revit.DependencyInjection.Unity.Template
 {
     [ContainerProvider("AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")]
     public class App : RevitApp

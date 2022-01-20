@@ -3,10 +3,10 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Revit.DependencyInjection.Unity.Commands;
-using Revit.SampleCommands.Interfaces;
+using Revit.DependencyInjection.Unity.Template.Interfaces;
 using Unity;
 
-namespace Revit.SampleCommands.Commands.SampleInjection
+namespace Revit.DependencyInjection.Unity.Template.Commands.SampleInjection
 {
     [Transaction(TransactionMode.Manual)]
     public class SampleInjectionCommand : RevitAppCommand<App>

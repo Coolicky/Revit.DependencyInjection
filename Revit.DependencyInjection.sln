@@ -4,9 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.DependencyInjection.U
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B853F4F8-B8D2-40C9-ADD0-0587F8326C72}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8941F6B5-7076-454B-A31A-4521B5835396}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{8941F6B5-7076-454B-A31A-4521B5835396}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.SampleCommands", "Revit.SampleCommands\Revit.SampleCommands.csproj", "{758EED56-ED49-45F5-9B15-8409F800CA62}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.DependencyInjection.Unity.Template", "Revit.DependencyInjection.Unity.Template\Revit.DependencyInjection.Unity.Template.csproj", "{758EED56-ED49-45F5-9B15-8409F800CA62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

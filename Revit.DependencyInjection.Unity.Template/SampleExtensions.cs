@@ -1,9 +1,9 @@
-﻿using Revit.SampleCommands.Commands.SampleViews.ViewModels;
-using Revit.SampleCommands.Commands.SampleViews.Views;
-using Revit.SampleCommands.Interfaces;
+﻿using Revit.DependencyInjection.Unity.Template.Commands.SampleViews.ViewModels;
+using Revit.DependencyInjection.Unity.Template.Commands.SampleViews.Views;
+using Revit.DependencyInjection.Unity.Template.Interfaces;
 using Unity;
 
-namespace Revit.SampleCommands
+namespace Revit.DependencyInjection.Unity.Template
 {
     public static class SamplePipeline
     {

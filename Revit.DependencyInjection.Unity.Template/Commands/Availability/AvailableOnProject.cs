@@ -1,20 +1,20 @@
-using Autodesk.Revit.DB;
+﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace Revit.SampleCommands.Commands.Availability
+namespace Revit.DependencyInjection.Unity.Template.Commands.Availability
 {
     /// <summary>
-    /// The Command will only be available on Family environment
+    /// The Command will only be available on Project environment
     /// </summary>
-    public class AvailableOnFamily : IExternalCommandAvailability
+    public class AvailableOnProject : IExternalCommandAvailability
     {
         public bool IsCommandAvailable(UIApplication applicationData, CategorySet selectedCategories)
         {
             if (applicationData.ActiveUIDocument == null) return false;
             if (applicationData.ActiveUIDocument.Document == null) return false;
-            if (applicationData.ActiveUIDocument.Document.IsFamilyDocument) return true;
+            if (applicationData.ActiveUIDocument.Document.IsFamilyDocument) return false;
 
-            return false;
+            return true;
         }
     }
 }

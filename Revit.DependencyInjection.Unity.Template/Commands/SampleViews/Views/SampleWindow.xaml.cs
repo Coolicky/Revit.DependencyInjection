@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using Revit.SampleCommands.Commands.SampleViews.ViewModels;
+using Revit.DependencyInjection.Unity.Template.Commands.SampleViews.ViewModels;
 
-namespace Revit.SampleCommands.Commands.SampleViews.Views
+namespace Revit.DependencyInjection.Unity.Template.Commands.SampleViews.Views
 {
     public partial class SampleWindow : Window
     {

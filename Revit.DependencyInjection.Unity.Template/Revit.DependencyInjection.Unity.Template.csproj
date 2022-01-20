@@ -7,8 +7,8 @@
         <ProjectGuid>{758EED56-ED49-45F5-9B15-8409F800CA62}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>Revit.SampleCommands</RootNamespace>
-        <AssemblyName>Revit.SampleCommands</AssemblyName>
+        <RootNamespace>Revit.DependencyInjection.Unity.Template</RootNamespace>
+        <AssemblyName>Revit.DependencyInjection.Unity.Template</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>

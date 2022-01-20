@@ -2,18 +2,16 @@
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Revit.DependencyInjection.Unity.Commands;
-using Revit.SampleCommands.Commands.SampleViews.Views;
 using Unity;
 
-namespace Revit.SampleCommands.Commands.SampleViews
+namespace Revit.DependencyInjection.Unity.Template.Commands.HelloWorld
 {
     [Transaction(TransactionMode.Manual)]
-    public class SampleWindowCommand : RevitAppCommand<App>
+    public class HelloWorldCommand : RevitAppCommand<App>
     {
         public override Result Execute(IUnityContainer container, ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var window = container.Resolve<SampleWindow>();
-            window.Show();
+            TaskDialog.Show("Hello", "Hello World");
             
             return Result.Succeeded;
         }

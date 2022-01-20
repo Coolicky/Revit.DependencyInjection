@@ -6,7 +6,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Revit.DependencyInjection.Unity.Async;
 
-namespace Revit.SampleCommands.Interfaces
+namespace Revit.DependencyInjection.Unity.Template.Interfaces
 {
     public interface ISampleSelector
     {

@@ -2,9 +2,9 @@
 using Autodesk.Revit.DB;
 using Prism.Commands;
 using Prism.Mvvm;
-using Revit.SampleCommands.Interfaces;
+using Revit.DependencyInjection.Unity.Template.Interfaces;
 
-namespace Revit.SampleCommands.Commands.SampleViews.ViewModels
+namespace Revit.DependencyInjection.Unity.Template.Commands.SampleViews.ViewModels
 {
     public class SampleWindowViewModel : BindableBase
     {
