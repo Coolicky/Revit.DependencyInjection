@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{A5401D18-3A13-42BF-836E-90982C40AFC8}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>Revit.DependencyInjection</RootNamespace>
+        <AssemblyName>Revit.DependencyInjection</AssemblyName>
+        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+      <DebugType>pdbonly</DebugType>
+      <Optimize>true</Optimize>
+      <DefineConstants>TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+      <OutputPath>bin\x64\Release\</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+      <DebugSymbols>true</DebugSymbols>
+      <DebugType>full</DebugType>
+      <Optimize>false</Optimize>
+      <DefineConstants>DEBUG;TRACE</DefineConstants>
+      <ErrorReport>prompt</ErrorReport>
+      <WarningLevel>4</WarningLevel>
+      <OutputPath>bin\x64\Debug\</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="AdWindows, Version=3.1.7.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2022.1.0\lib\net48\AdWindows.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="PresentationCore" />
+        <Reference Include="RevitAPI, Version=22.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2022.1.0\lib\net48\RevitAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="RevitAPIUI, Version=22.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2022.1.0\lib\net48\RevitAPIUI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Xml" />
+        <Reference Include="UIFramework, Version=22.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2022.1.0\lib\net48\UIFramework.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
+          <HintPath>..\packages\Unity.5.11.10\lib\net48\Unity.Abstractions.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0">
+          <HintPath>..\packages\Unity.5.11.10\lib\net48\Unity.Container.dll</HintPath>
+          <Private>True</Private>
+        </Reference>
+        <Reference Include="WindowsBase" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Abstractions\IContainerPipeline.cs" />
+        <Compile Include="Applications\IRevitExternalApp.cs" />
+        <Compile Include="Applications\RevitApp.cs" />
+        <Compile Include="Applications\RevitAppBase.cs" />
+        <Compile Include="Applications\RevitContainerProviderBase.cs" />
+        <Compile Include="Async\DelegateType.cs" />
+        <Compile Include="Async\FuncTask.cs" />
+        <Compile Include="Async\IRevitEventHandler.cs" />
+        <Compile Include="Async\RevitAsyncExtensions.cs" />
+        <Compile Include="Async\RevitAsyncSettings.cs" />
+        <Compile Include="Async\RevitExternalHandler.cs" />
+        <Compile Include="Base\ContainerProviderAttribute.cs" />
+        <Compile Include="Base\ContainerProviderReflector.cs" />
+        <Compile Include="Base\IRevitContext.cs" />
+        <Compile Include="Base\IRevitContextProvider.cs" />
+        <Compile Include="Base\RevitAppData.cs" />
+        <Compile Include="Base\RevitContext.cs" />
+        <Compile Include="Commands\Attributes\CommandGuardAttribute.cs" />
+        <Compile Include="Commands\Attributes\IgnoreCommandGuardConditionsAttribute.cs" />
+        <Compile Include="Commands\CommandExtensions.cs" />
+        <Compile Include="Commands\CommandInfo.cs" />
+        <Compile Include="Commands\ErrorHandlers\EmptyRevitCommandErrorHandler.cs" />
+        <Compile Include="Commands\ErrorHandlers\RevitCommandErrorHandlerProvider.cs" />
+        <Compile Include="Commands\Guards\ConditionBuilder.cs" />
+        <Compile Include="Commands\Guards\ConditionCollection.cs" />
+        <Compile Include="Commands\Guards\ICanBeGuardedRevitCommand.cs" />
+        <Compile Include="Commands\Guards\IConditionBuilder.cs" />
+        <Compile Include="Commands\Guards\IConditionBuilderProvider.cs" />
+        <Compile Include="Commands\Guards\IConditionCollection.cs" />
+        <Compile Include="Commands\Guards\IRevitCommandGuard.cs" />
+        <Compile Include="Commands\Guards\IRevitCommandGuardChecker.cs" />
+        <Compile Include="Commands\ICanBeGuardedRevitCommand.cs" />
+        <Compile Include="Commands\ICommandInfo.cs" />
+        <Compile Include="Commands\IRevitDestroyableCommand.cs" />
+        <Compile Include="Commands\RevitAppCommand.cs" />
+        <Compile Include="Commands\RevitContainerCommand.cs" />
+        <Compile Include="Commands\RevitContainerCommandBase.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="RibbonCommands\Attributes\IRibbonCommandAttribute.cs" />
+        <Compile Include="RibbonCommands\Attributes\RibbonPushButtonAttribute.cs" />
+        <Compile Include="RibbonCommands\Attributes\RibbonSplitButtonAttribute.cs" />
+        <Compile Include="RibbonCommands\Attributes\RibbonStackButtonAttribute.cs" />
+        <Compile Include="RibbonCommands\Extensions.cs" />
+        <Compile Include="RibbonCommands\RibbonCommandConfiguration.cs" />
+        <Compile Include="RibbonCommands\RibbonCommandData.cs" />
+        <Compile Include="UI\ImageManager.cs" />
+        <Compile Include="UI\IRibbonManager.cs" />
+        <Compile Include="UI\IRibbonPanelManager.cs" />
+        <Compile Include="UI\IRibbonTabManager.cs" />
+        <Compile Include="UI\RibbonHelpers.cs" />
+        <Compile Include="UI\RibbonManager.cs" />
+        <Compile Include="UI\RibbonPanelManager.cs" />
+        <Compile Include="UI\RibbonTabManager.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>
