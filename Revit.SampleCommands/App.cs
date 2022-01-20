@@ -3,10 +3,10 @@ using Revit.DependencyInjection.Applications;
 using Revit.DependencyInjection.Async;
 using Revit.DependencyInjection.Base;
 using Revit.DependencyInjection.UI;
-using Revit.SampleCommands.Commands;
 using Revit.SampleCommands.Commands.Availability;
 using Revit.SampleCommands.Commands.HelloWorld;
 using Revit.SampleCommands.Commands.SampleInjection;
+using Revit.SampleCommands.Commands.SampleViews;
 using Unity;
 
 namespace Revit.SampleCommands
@@ -23,12 +23,15 @@ namespace Revit.SampleCommands
             
             samplePanel.AddPushButton<HelloWorldCommand, AvailableAlways>($"Hello{br}World");
             samplePanel.AddPushButton<SampleInjectionCommand, AvailableOnProject>($"Get{br}Selection");
+            samplePanel.AddPushButton<SampleWindowCommand, AvailableOnProject>($"Show{br}Window");
         }
 
         public override Result OnStartup(IUnityContainer container, UIControlledApplication application)
         {
             container.AddRevitAsync(GetAsyncSettings);
             container.RegisterSampleServices();
+            container.RegisterViews();
+            container.RegisterViewModels();
             return Result.Succeeded;
         }
 

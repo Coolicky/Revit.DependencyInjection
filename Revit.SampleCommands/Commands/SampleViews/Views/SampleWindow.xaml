@@ -1,0 +1,33 @@
+﻿<Window x:Class="Revit.SampleCommands.Commands.SampleViews.Views.SampleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:Revit.SampleCommands.Commands.SampleViews.Views"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}, Path=ViewModel}"
+        Title="SampleWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <ListView Grid.Row="0"
+                  ItemsSource="{Binding Elements}"
+                  SelectionMode="Single"
+                  SelectedItem="{Binding SelectedElement}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <Run Text="Name: " />
+                        <Run Text="{Binding Name, Mode=OneWay}" />
+                        <Run Text=" - " />
+                        <Run Text="ID: " />
+                        <Run Text="{Binding Id.IntegerValue, Mode=OneWay}" />
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Grid.Row="1" Margin="5" Content="Select Elements From Revit" Command="{Binding SelectElementsCommand}" />
+    </Grid>
+</Window>

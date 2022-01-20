@@ -16,9 +16,10 @@ namespace Revit.SampleCommands.Commands.SampleInjection
             var sampleSelector = container.Resolve<ISampleSelector>();
             
             var selectedElements = sampleSelector.GetSelectedOrSelectElements().Result;
+            
             var elementsMessage = string.Join("\n", 
                 selectedElements.Select(r => $"Name: {r.Name} - ID: {r.Id}"));
-            
+
             TaskDialog.Show("Selected Elements", elementsMessage);
             
             return Result.Succeeded;
