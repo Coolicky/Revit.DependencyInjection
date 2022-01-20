@@ -78,6 +78,7 @@
     <Compile Include="Async\RevitExternalHandler.cs" />
     <Compile Include="Base\ContainerProviderAttribute.cs" />
     <Compile Include="Base\ContainerProviderReflector.cs" />
+    <Compile Include="Base\IRevitAppData.cs" />
     <Compile Include="Base\IRevitContext.cs" />
     <Compile Include="Base\IRevitContextProvider.cs" />
     <Compile Include="Base\RevitAppData.cs" />

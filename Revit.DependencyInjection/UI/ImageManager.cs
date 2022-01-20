@@ -57,6 +57,7 @@ namespace Revit.DependencyInjection.UI
             }
             catch
             {
+                // ignored
             }
 
             return null;

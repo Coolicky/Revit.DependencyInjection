@@ -1,4 +1,5 @@
 ﻿using System;
+using Revit.DependencyInjection.Commands.Guards;
 
 namespace Revit.DependencyInjection.Commands.Attributes
 {
@@ -9,7 +10,7 @@ namespace Revit.DependencyInjection.Commands.Attributes
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class CommandGuardAttribute : Attribute
     {
-        private readonly Type revitCommandGuardType;
+        private readonly Type _revitCommandGuardType;
 
         /// <summary>
         ///  Adds a CommandGuard to to a Revit Command.
@@ -17,7 +18,7 @@ namespace Revit.DependencyInjection.Commands.Attributes
         /// <param name="revitCommandGuardType">The type mus implement <see cref="IRevitCommandGuard"/> interface</param>
         public CommandGuardAttribute(Type revitCommandGuardType)
         {
-            this.revitCommandGuardType = revitCommandGuardType;
+            _revitCommandGuardType = revitCommandGuardType;
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace Revit.DependencyInjection.Commands.Attributes
         /// <returns>The type of the Command Guard</returns>
         public Type GetCommandGuardType()
         {
-            return this.revitCommandGuardType;
+            return _revitCommandGuardType;
         }
     }
 }

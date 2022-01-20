@@ -5,8 +5,8 @@ namespace Revit.DependencyInjection.RibbonCommands
 {
     internal class RibbonCommandData
     {
-        internal RibbonPanel ribbonPanel;
-        internal PushButtonData button;
-        internal IRibbonCommandAttribute commandAttribute;
+        internal RibbonPanel RibbonPanel;
+        internal PushButtonData Button;
+        internal IRibbonCommandAttribute CommandAttribute;
     }
 }

@@ -7,16 +7,17 @@ namespace Revit.DependencyInjection.Base
 {
 internal class RevitContext : IRevitContext, IRevitContextProvider
     {
-        private Document document;
-        private Application application;
-        private UIDocument uiDocument;
-        private UIApplication uiApplication;
+        private Document _document;
+        private Application _application;
+        private UIDocument _uiDocument;
+        private UIApplication _uiApplication;
 
-        private bool hookupViewChanged;
+        private bool _hookupViewChanged;
 
         /// <summary>
         /// Constructor
         /// </summary>
+        // ReSharper disable once EmptyConstructor
         public RevitContext()
         {
         }
@@ -27,7 +28,7 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// <returns></returns>
         public Document GetDocument()
         {
-            return this.document;
+            return _document;
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// <returns></returns>
         public UIDocument GetUIDocument()
         {
-            return this.uiDocument;
+            return _uiDocument;
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// <returns></returns>
         public Application GetApplication()
         {
-            return this.application;
+            return _application;
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// <returns></returns>
         public UIApplication GetUIApplication()
         {
-            return this.uiApplication;
+            return _uiApplication;
         }
 
         /// <summary>
@@ -73,10 +74,10 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// </summary>
         public void UnhookRevitEvents(UIControlledApplication application)
         {
-            application.ControlledApplication.DocumentCreated -= this.OnDocumentCreated;
-            application.ControlledApplication.DocumentChanged -= this.OnDocumentChanged;
-            application.ControlledApplication.DocumentOpened -= this.OnDocumentOpened;
-            application.ControlledApplication.DocumentClosed -= this.OnDocumentClosed;
+            application.ControlledApplication.DocumentCreated -= OnDocumentCreated;
+            application.ControlledApplication.DocumentChanged -= OnDocumentChanged;
+            application.ControlledApplication.DocumentOpened -= OnDocumentOpened;
+            application.ControlledApplication.DocumentClosed -= OnDocumentClosed;
 
             // Makes sure to unhook the ViewChanged event and get rid of reference to uiApplication
             UnhookViewChanged();
@@ -91,6 +92,8 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
             {
                 UpdateContext(uIDocument.Document);
             }
+
+            if (application == null) return;
             application.Application.DocumentCreated += OnDocumentCreated;
             application.Application.DocumentChanged += OnDocumentChanged;
             application.Application.DocumentOpened += OnDocumentOpened;
@@ -102,10 +105,11 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// </summary>
         public void UnhookRevitEvents(UIApplication application)
         {
-            application.Application.DocumentCreated -= this.OnDocumentCreated;
-            application.Application.DocumentChanged -= this.OnDocumentChanged;
-            application.Application.DocumentOpened -= this.OnDocumentOpened;
-            application.Application.DocumentClosed -= this.OnDocumentClosed;
+            if (application == null) return;
+            application.Application.DocumentCreated -= OnDocumentCreated;
+            application.Application.DocumentChanged -= OnDocumentChanged;
+            application.Application.DocumentOpened -= OnDocumentOpened;
+            application.Application.DocumentClosed -= OnDocumentClosed;
 
             // Makes sure to unhook the ViewChanged event and get rid of reference to uiApplication
             UnhookViewChanged();
@@ -114,36 +118,36 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         private void OnDocumentCreated(object sender, Autodesk.Revit.DB.Events.DocumentCreatedEventArgs e)
         {
             var doc = e.Document;
-            this.UpdateContext(doc);
+            UpdateContext(doc);
             HookUpViewChanged(doc);
         }
 
         private void OnDocumentChanged(object sender, Autodesk.Revit.DB.Events.DocumentChangedEventArgs e)
         {
             var doc = e.GetDocument();
-            this.UpdateContext(doc);
-            this.HookUpViewChanged(doc);
+            UpdateContext(doc);
+            HookUpViewChanged(doc);
         }
 
         private void OnDocumentOpened(object sender, Autodesk.Revit.DB.Events.DocumentOpenedEventArgs e)
         {
             var doc = e.Document;
-            this.UpdateContext(doc);
-            this.HookUpViewChanged(doc);
+            UpdateContext(doc);
+            HookUpViewChanged(doc);
         }
 
         private void OnViewChanged(object sender, Autodesk.Revit.UI.Events.ViewActivatedEventArgs e)
         {
             var doc = e.Document;
-            this.UpdateContext(doc);
+            UpdateContext(doc);
         }
 
         private void OnDocumentClosed(object sender, Autodesk.Revit.DB.Events.DocumentClosedEventArgs e)
         {
-            // If the ActiveUIdocument is not null, it means that there is another document in the background
+            // If the ActiveUIDocument is not null, it means that there is another document in the background
             // The DocumentChanged or ViewChanged event will pickup that new Document
             // So in the case of null ActiveUIDocument we cleanup the container from Documents and Applications
-            if (this.uiApplication?.ActiveUIDocument == null)
+            if (_uiApplication?.ActiveUIDocument == null)
             {
                 UpdateContext(null);
             }
@@ -151,49 +155,39 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
 
         private void UpdateContext(Document doc)
         {
-            this.document = doc;
+            _document = doc;
 
             // In the case of a valid Document context
             if (doc != null)
             {
-                var uidoc = new UIDocument(doc);
+                var uiDoc = new UIDocument(doc);
 
-                this.application = doc.Application;
-                this.uiDocument = uidoc;
-                this.uiApplication = uidoc.Application;
+                _application = doc.Application;
+                _uiDocument = uiDoc;
+                _uiApplication = uiDoc.Application;
             }
             else
             {
-                this.application = null;
-                this.uiDocument = null;
-                this.uiApplication = null;
+                _application = null;
+                _uiDocument = null;
+                _uiApplication = null;
             }
 
         }
 
-        private bool HookUpViewChanged(Document doc)
+        private void HookUpViewChanged(Document doc)
         {
-            if (!this.hookupViewChanged)
-            {
-                this.hookupViewChanged = true;
-                var uidoc = new UIDocument(doc);
-                uidoc.Application.ViewActivated += this.OnViewChanged;
-                return true;
-            }
-
-            return false;
+            if (_hookupViewChanged) return;
+            _hookupViewChanged = true;
+            var uiDoc = new UIDocument(doc);
+            uiDoc.Application.ViewActivated += OnViewChanged;
         }
 
-        private bool UnhookViewChanged()
+        private void UnhookViewChanged()
         {
-            if (hookupViewChanged && this.uiApplication != null)
-            {
-                hookupViewChanged = false;
-                this.uiApplication.ViewActivated -= this.OnViewChanged;
-                return true;
-            }
-
-            return false;
+            if (!_hookupViewChanged || _uiApplication == null) return;
+            _hookupViewChanged = false;
+            _uiApplication.ViewActivated -= OnViewChanged;
         }
 
         /// <summary>
@@ -201,17 +195,17 @@ internal class RevitContext : IRevitContext, IRevitContextProvider
         /// </summary>
         public bool IsInRevitContext()
         {
-            if (this.document == null)
+            if (_document == null)
             {
                 return false;
             }
 
-            if (this.document.IsModifiable)
+            if (_document.IsModifiable)
             {
                 return true;
             }
 
-            using (var t = new Transaction(document, "Context"))
+            using (var t = new Transaction(_document, "Context"))
             {
                 try
                 {

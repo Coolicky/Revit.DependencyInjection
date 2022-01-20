@@ -20,7 +20,7 @@ namespace Revit.DependencyInjection.Commands
         /// </summary>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var commandType = this.GetType();
+            var commandType = GetType();
 
             // Gets the original container
             IUnityContainer container = GetContainer();
@@ -37,7 +37,7 @@ namespace Revit.DependencyInjection.Commands
                 if (commandGuardChecker.CanExecute(commandInfo))
                 {
                     // Runs the users Execute command
-                    return this.Execute(scope, commandData, ref message, elements);
+                    return Execute(scope, commandData, ref message, elements);
                 }
                 else
                 {
@@ -54,7 +54,7 @@ namespace Revit.DependencyInjection.Commands
                 }
                 else
                 {
-                    // If the hanlder handles the exception, the command will return succeeded
+                    // If the handler handles the exception, the command will return succeeded
                     return Result.Succeeded;
                 }
             }
@@ -63,10 +63,11 @@ namespace Revit.DependencyInjection.Commands
                 // Safely calls lifecycle hook 
                 try
                 {
-                    this.OnDestroy(scope);
+                    OnDestroy(scope);
                 }
                 catch
                 {
+                    // ignored
                 }
 
                 // Cleans up the scoped copy of the container

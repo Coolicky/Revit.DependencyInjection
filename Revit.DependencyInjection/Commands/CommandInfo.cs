@@ -6,30 +6,30 @@ namespace Revit.DependencyInjection.Commands
 {
     public class CommandInfo : ICommandInfo
     {
-        private readonly Type commandType;
-        private readonly IUnityContainer container;
-        private readonly ExternalCommandData commandData;
+        private readonly Type _commandType;
+        private readonly IUnityContainer _container;
+        private readonly ExternalCommandData _commandData;
 
-        internal CommandInfo(Type commandType, IUnityContainer container, ExternalCommandData CommandData)
+        internal CommandInfo(Type commandType, IUnityContainer container, ExternalCommandData commandData)
         {
-            this.commandType = commandType;
-            this.container = container;
-            commandData = CommandData;
+            _commandType = commandType;
+            _container = container;
+            _commandData = commandData;
         }
 
         public IUnityContainer GetContainer()
         {
-            return container;
+            return _container;
         }
 
         public Type GetCommandType()
         {
-            return commandType;
+            return _commandType;
         }
 
         public ExternalCommandData GetCommandData()
         {
-            return commandData;
+            return _commandData;
         }
     }
 }

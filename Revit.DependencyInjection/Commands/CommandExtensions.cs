@@ -6,7 +6,7 @@ using Unity;
 namespace Revit.DependencyInjection.Commands
 {
     /// <summary>
-    /// Command Extensions for Onbox's DI system.
+    /// Command Extensions
     /// </summary>
     public static class CommandExtensions
     {

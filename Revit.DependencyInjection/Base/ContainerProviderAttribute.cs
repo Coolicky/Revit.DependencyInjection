@@ -3,7 +3,7 @@
 namespace Revit.DependencyInjection.Base
 {   
     /// <summary>
-    /// Provides a way for the Onbox framework to locate the IOC container for your application
+    /// Provides a way to locate the IOC container for your application
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     sealed public class ContainerProviderAttribute : Attribute
@@ -18,7 +18,7 @@ namespace Revit.DependencyInjection.Base
         /// </summary>
         public ContainerProviderAttribute(string containerGuid)
         {
-            this.ContainerGuid = containerGuid;
+            ContainerGuid = containerGuid;
         }
     }
 }

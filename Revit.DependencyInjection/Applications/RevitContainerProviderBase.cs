@@ -9,7 +9,7 @@ namespace Revit.DependencyInjection.Applications
     public abstract class RevitContainerProviderBase
     {
         
-        internal static ConcurrentDictionary<string, IUnityContainer> containers = new ConcurrentDictionary<string, IUnityContainer>();
+        internal static ConcurrentDictionary<string, IUnityContainer> Containers = new ConcurrentDictionary<string, IUnityContainer>();
 
         internal static IUnityContainer GetContainer(string guid)
         {
@@ -18,7 +18,7 @@ namespace Revit.DependencyInjection.Applications
                 throw new Exception($"Application should have a valid GUID to locate the container");
             }
 
-            if (containers.TryGetValue(guid, out IUnityContainer container))
+            if (Containers.TryGetValue(guid, out IUnityContainer container))
             {
                 return container;
             }
@@ -29,13 +29,13 @@ namespace Revit.DependencyInjection.Applications
         internal IUnityContainer HookUpContainer(IUnityContainer container, string containerGuid)
         {
             // Do not duplicate existing container with the same GUID, instead, share same container
-            if (containers.ContainsKey(containerGuid))
+            if (Containers.ContainsKey(containerGuid))
             {
-                container = containers[containerGuid];
+                container = Containers[containerGuid];
             }
             else
             {
-                containers[containerGuid] = container;
+                Containers[containerGuid] = container;
             }
 
             return container;
@@ -51,7 +51,7 @@ namespace Revit.DependencyInjection.Applications
         internal IUnityContainer UnhookContainer(string containerGuid, IUnityContainer container)
         {
             container.Dispose();
-            containers.TryRemove(containerGuid, out _);
+            Containers.TryRemove(containerGuid, out _);
             return container;
         }
 
@@ -106,10 +106,10 @@ namespace Revit.DependencyInjection.Applications
         {
             var revitUIApp = new RevitAppData
             {
-                versionBuild = application.Application.VersionBuild,
-                versionNumber = application.Application.VersionNumber,
-                subVersionNumber = application.Application.SubVersionNumber,
-                versionName = application.Application.VersionName,
+                VersionBuild = application.Application.VersionBuild,
+                VersionNumber = application.Application.VersionNumber,
+                SubVersionNumber = application.Application.SubVersionNumber,
+                VersionName = application.Application.VersionName,
             };
 
             container.RegisterInstance<IRevitAppData>(revitUIApp);
@@ -120,10 +120,10 @@ namespace Revit.DependencyInjection.Applications
         {
             var revitUIApp = new RevitAppData
             {
-                versionBuild = application.ControlledApplication.VersionBuild,
-                versionNumber = application.ControlledApplication.VersionNumber,
-                subVersionNumber = application.ControlledApplication.SubVersionNumber,
-                versionName = application.ControlledApplication.VersionName,
+                VersionBuild = application.ControlledApplication.VersionBuild,
+                VersionNumber = application.ControlledApplication.VersionNumber,
+                SubVersionNumber = application.ControlledApplication.SubVersionNumber,
+                VersionName = application.ControlledApplication.VersionName,
             };
 
             container.RegisterInstance<IRevitAppData>(revitUIApp);

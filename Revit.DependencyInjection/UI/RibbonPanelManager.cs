@@ -8,18 +8,18 @@ namespace Revit.DependencyInjection.UI
     /// </summary>
     public class RibbonPanelManager : IRibbonPanelManager
     {
-        private readonly string tabName;
-        private readonly RibbonPanel panel;
-        private readonly RibbonHelpers ribbonHelpers;
+        private readonly string _tabName;
+        private readonly RibbonPanel _panel;
+        private readonly RibbonHelpers _ribbonHelpers;
 
         /// <summary>
         /// The responsible for adding UI Elements in the Ribbon, e.g. Buttons and Separators.
         /// </summary>
         public RibbonPanelManager(string tabName, RibbonPanel panel, ImageManager imageManager)
         {
-            this.tabName = tabName;
-            this.panel = panel;
-            this.ribbonHelpers = new RibbonHelpers(imageManager);
+            _tabName = tabName;
+            _panel = panel;
+            _ribbonHelpers = new RibbonHelpers(imageManager);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public string GetTabName()
         {
-            return this.tabName;
+            return _tabName;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns></returns>
         public RibbonPanel GetPanel()
         {
-            return this.panel;
+            return _panel;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created PushButton.</returns>
         public PushButton AddPushButton<TExternalCommand>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new()
         {
-            return ribbonHelpers.CreatePushButton(panel, name, image, typeof(TExternalCommand), tooltip, description);
+            return _ribbonHelpers.CreatePushButton(_panel, name, image, typeof(TExternalCommand), tooltip, description);
         }
         
         /// <summary>
@@ -65,13 +65,13 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created PushButton.</returns>
         public PushButton AddPushButton<TExternalCommand, TAvailability>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new() where TAvailability : class, IExternalCommandAvailability, new()
         {
-            var button = ribbonHelpers.CreatePushButton(panel, name, image, typeof(TExternalCommand), tooltip, description);
+            var button = _ribbonHelpers.CreatePushButton(_panel, name, image, typeof(TExternalCommand), tooltip, description);
             button.AvailabilityClassName = typeof(TAvailability).FullName;
             return button;
         }
 
         /// <summary>
-        /// Creates a new PushbuttonData for a Command with the default CommandAvailability, to be later added to another UI Element.
+        /// Creates a new PushButtonData for a Command with the default CommandAvailability, to be later added to another UI Element.
         /// </summary>
         /// <typeparam name="TExternalCommand">The type of the External Command.</typeparam>
         /// <param name="name">The name of the Command as it appears in Revit UI.</param>
@@ -81,11 +81,11 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created PushButtonData.</returns>
         public PushButtonData CreatePushButtonData<TExternalCommand>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new()
         {
-            return ribbonHelpers.CreatePushButtonData(name, image, typeof(TExternalCommand), tooltip, description);
+            return _ribbonHelpers.CreatePushButtonData(name, image, typeof(TExternalCommand), tooltip, description);
         }
 
         /// <summary>
-        /// Creates a new PushbuttonData for a Command with a custom CommandAvailability, to be later added to another UI Element.
+        /// Creates a new PushButtonData for a Command with a custom CommandAvailability, to be later added to another UI Element.
         /// </summary>
         /// <typeparam name="TExternalCommand">The type of the External Command.</typeparam>
         /// <typeparam name="TAvailability">The type of the Command Availability.</typeparam>
@@ -96,7 +96,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created PushButtonData.</returns>
         public PushButtonData CreatePushButtonData<TExternalCommand, TAvailability>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new() where TAvailability : class, IExternalCommandAvailability, new()
         {
-            var button = ribbonHelpers.CreatePushButtonData(name, image, typeof(TExternalCommand), tooltip, description);
+            var button = _ribbonHelpers.CreatePushButtonData(name, image, typeof(TExternalCommand), tooltip, description);
             button.AvailabilityClassName = typeof(TAvailability).FullName;
             return button;
         }
@@ -112,7 +112,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created ToggleButton.</returns>
         public ToggleButton AddToggleButton<TExternalCommand>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new()
         {
-            var button = ribbonHelpers.CreateToggleButton(panel, name, image, typeof(TExternalCommand), tooltip, description);
+            var button = _ribbonHelpers.CreateToggleButton(_panel, name, image, typeof(TExternalCommand), tooltip, description);
             return button;
         }
 
@@ -128,19 +128,19 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The created ToggleButton.</returns>
         public ToggleButton AddToggleButton<TExternalCommand, TAvailability>(string name, string image = null, string tooltip = null, string description = null) where TExternalCommand : class, IExternalCommand, new() where TAvailability : class, IExternalCommandAvailability, new()
         {
-            var button = ribbonHelpers.CreateToggleButton(panel, name, image, typeof(TExternalCommand), tooltip, description);
+            var button = _ribbonHelpers.CreateToggleButton(_panel, name, image, typeof(TExternalCommand), tooltip, description);
             button.AvailabilityClassName = typeof(TAvailability).FullName;
             return button;
         }
 
         /// <summary>
-        /// Adds a Splitbutton in the Revit UI.
+        /// Adds a SplitButton in the Revit UI.
         /// </summary>
         /// <param name="pushButtonDataList">The list of PushButtons to add.</param>
         /// <returns>The created SplitButton</returns>
         public SplitButton AddSplitButton(List<PushButtonData> pushButtonDataList)
         {
-            return ribbonHelpers.CreateSplitButton(panel, pushButtonDataList);
+            return _ribbonHelpers.CreateSplitButton(_panel, pushButtonDataList);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The list of elements added</returns>
         public IList<RibbonItem> AddStackedItems(RibbonItemData item1, RibbonItemData item2)
         {
-            return panel.AddStackedItems(item1, item2);
+            return _panel.AddStackedItems(item1, item2);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns>The list of elements added</returns>
         public IList<RibbonItem> AddStackedItems(RibbonItemData item1, RibbonItemData item2, RibbonItemData item3)
         {
-            return panel.AddStackedItems(item1, item2, item3);
+            return _panel.AddStackedItems(item1, item2, item3);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public void AddSeparator()
         {
-            panel.AddSeparator();
+            _panel.AddSeparator();
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public void AddSlideOut()
         {
-            panel.AddSlideOut();
+            _panel.AddSlideOut();
         }
 
     }

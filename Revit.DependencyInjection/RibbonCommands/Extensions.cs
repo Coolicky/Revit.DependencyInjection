@@ -10,23 +10,26 @@ namespace Revit.DependencyInjection.RibbonCommands
 {
     public static class Extensions
     {
-        private static readonly RibbonHelpers ribbonHelpers = new RibbonHelpers(new ImageManager());
+        private static readonly RibbonHelpers RibbonHelpers = new RibbonHelpers(new ImageManager());
 
         /// <summary>
         /// Automatically adds buttons for Revit Commands decorated with: <see cref="RibbonPushButtonAttribute"/>, <see cref="RibbonSplitButtonAttribute"/> and <see cref="RibbonStackButtonAttribute"/>
         /// </summary>
         /// <param name="ribbonManager"></param>
         /// <param name="config">Configuration options for automatically adding Ribbon Panels and Buttons.</param>
-        public static void AddRibbonCommands(this IRibbonManager ribbonManager, Action<RibbonCommandConfiguration> config = null)
+        public static void AddRibbonCommands(this IRibbonManager ribbonManager,
+            Action<RibbonCommandConfiguration> config = null)
         {
             var assembly = Assembly.GetCallingAssembly();
             var assemblyName = assembly.GetName().Name;
 
             var commandItemType = typeof(IRibbonCommandAttribute);
 
-            var ribbonConfig = new RibbonCommandConfiguration();
-            ribbonConfig.DefaultPanelName = assemblyName;
-            ribbonConfig.TabName = assemblyName;
+            var ribbonConfig = new RibbonCommandConfiguration
+            {
+                DefaultPanelName = assemblyName,
+                TabName = assemblyName
+            };
 
             config?.Invoke(ribbonConfig);
 
@@ -47,103 +50,126 @@ namespace Revit.DependencyInjection.RibbonCommands
 
             foreach (var commandData in ribbonCommandDataList)
             {
-                if (commandData.commandAttribute is RibbonPushButtonAttribute pushButtonAttr)
+                if (commandData.CommandAttribute is RibbonPushButtonAttribute)
+                    ProcessPushButton(commandData);
+                else if (commandData.CommandAttribute is RibbonSplitButtonAttribute)
+                    ProcessSplitButton(commandData, addedSplitButtonGroups, ribbonCommandDataList);
+                else if (commandData.CommandAttribute is RibbonStackButtonAttribute)
+                    ProcessStackButton(commandData, addedStackButtonGroups, ribbonCommandDataList);
+            }
+        }
+
+        private static void ProcessPushButton(RibbonCommandData commandData)
+        {
+            try
+            {
+                commandData.RibbonPanel.AddItem(commandData.Button);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        private static void ProcessPushButton(RibbonCommandData commandData, PulldownButton splitGroup)
+        {
+            try
+            {
+                splitGroup?.AddPushButton(commandData.Button);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        private static void ProcessSplitButton(RibbonCommandData commandData,
+            ICollection<string> addedSplitButtonGroups,
+            IEnumerable<RibbonCommandData> ribbonCommandDataList)
+        {
+            if (!(commandData.CommandAttribute is RibbonSplitButtonAttribute splitButtonAttr) ||
+                addedSplitButtonGroups.Contains(splitButtonAttr.SplitButtonGroup)) return;
+            addedSplitButtonGroups.Add(splitButtonAttr.SplitButtonGroup);
+
+            // Ignore buttons with not group name
+            if (string.IsNullOrWhiteSpace(splitButtonAttr.SplitButtonGroup)) return;
+
+            var items = ribbonCommandDataList
+                .Where(d => d.CommandAttribute.PanelName == commandData.CommandAttribute.PanelName)
+                .Where(d => d.CommandAttribute is RibbonSplitButtonAttribute)
+                .Where(d => ((RibbonSplitButtonAttribute)d.CommandAttribute)?.SplitButtonGroup ==
+                            splitButtonAttr.SplitButtonGroup)
+                .OrderByDescending(d => ((RibbonSplitButtonAttribute)d.CommandAttribute).SplitGroupPriority)
+                .ToList();
+
+            var splitGroup =
+                commandData.RibbonPanel.AddItem(new SplitButtonData(splitButtonAttr.SplitButtonGroup,
+                    splitButtonAttr.SplitButtonGroup)) as SplitButton;
+
+            items.ForEach(r => ProcessPushButton(r, splitGroup));
+        }
+
+        private static void ProcessStackButton(RibbonCommandData commandData,
+            ICollection<string> addedStackButtonGroups,
+            IEnumerable<RibbonCommandData> ribbonCommandDataList)
+        {
+            if (!(commandData.CommandAttribute is RibbonStackButtonAttribute stackButtonAttr) ||
+                addedStackButtonGroups.Contains(stackButtonAttr.StackButtonGroup)) return;
+            addedStackButtonGroups.Add(stackButtonAttr.StackButtonGroup);
+
+            // Ignore buttons with not group name
+            if (string.IsNullOrWhiteSpace(stackButtonAttr.StackButtonGroup)) return;
+
+            var items = ribbonCommandDataList
+                .Where(d => d.CommandAttribute.PanelName == commandData.CommandAttribute.PanelName)
+                .Where(d => d.CommandAttribute is RibbonStackButtonAttribute)
+                .Where(d => ((RibbonStackButtonAttribute)d.CommandAttribute)?.StackButtonGroup ==
+                            stackButtonAttr.StackButtonGroup)
+                .OrderByDescending(d => ((RibbonStackButtonAttribute)d.CommandAttribute).StackGroupPriority)
+                .ToList();
+            
+            AddStackButtonItems(commandData, items);
+        }
+
+        private static void AddStackButtonItems(RibbonCommandData commandData, IReadOnlyList<RibbonCommandData> items)
+        {
+            if (items.Count >= 3)
+            {
+                try
                 {
-                    try
-                    {
-                        commandData.ribbonPanel.AddItem(commandData.button);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
+                    var item0 = items[0];
+                    var item1 = items[1];
+                    var item2 = items[2];
+                    commandData.RibbonPanel.AddStackedItems(item0.Button, item1.Button, item2.Button);
                 }
-                else if (commandData.commandAttribute is RibbonSplitButtonAttribute splitButtonAttr)
+                catch (Exception)
                 {
-                    if (!addedSplitButtonGroups.Contains(splitButtonAttr.SplitButtonGroup))
-                    {
-                        addedSplitButtonGroups.Add(splitButtonAttr.SplitButtonGroup);
-
-                        // Ignore buttons with not group name
-                        if (string.IsNullOrWhiteSpace(splitButtonAttr.SplitButtonGroup))
-                        {
-                            continue;
-                        }
-
-                        var items = ribbonCommandDataList
-                            .Where(d => d.commandAttribute.PanelName == commandData.commandAttribute.PanelName)
-                            .Where(d => d.commandAttribute is RibbonSplitButtonAttribute)
-                            .Where(d => (d.commandAttribute as RibbonSplitButtonAttribute).SplitButtonGroup == splitButtonAttr.SplitButtonGroup)
-                            .OrderByDescending(d => (d.commandAttribute as RibbonSplitButtonAttribute).SplitGroupPriority);
-
-                        var splitGroup = commandData.ribbonPanel.AddItem(new SplitButtonData(splitButtonAttr.SplitButtonGroup, splitButtonAttr.SplitButtonGroup)) as SplitButton;
-                        foreach (var item in items)
-                        {
-                            try
-                            {
-                                splitGroup.AddPushButton(item.button);
-                            }
-                            catch (Exception ex)
-                            {
-                            }
-                        }
-                    }
+                    // ignored
                 }
-                else if (commandData.commandAttribute is RibbonStackButtonAttribute stackButtonAttr)
+            }
+            else if (items.Count == 2)
+            {
+                try
                 {
-                    if (!addedStackButtonGroups.Contains(stackButtonAttr.StackButtonGroup))
-                    {
-                        addedStackButtonGroups.Add(stackButtonAttr.StackButtonGroup);
-
-                        // Ignore buttons with not group name
-                        if (string.IsNullOrWhiteSpace(stackButtonAttr.StackButtonGroup))
-                        {
-                            continue;
-                        }
-
-                        var items = ribbonCommandDataList
-                            .Where(d => d.commandAttribute.PanelName == commandData.commandAttribute.PanelName)
-                            .Where(d => d.commandAttribute is RibbonStackButtonAttribute)
-                            .Where(d => (d.commandAttribute as RibbonStackButtonAttribute).StackButtonGroup == stackButtonAttr.StackButtonGroup)
-                            .OrderByDescending(d => (d.commandAttribute as RibbonStackButtonAttribute).StackGroupPriority)
-                            .ToList();
-
-                        if (items.Count() >= 3)
-                        {
-                            try
-                            {
-                                var item0 = items[0];
-                                var item1 = items[1];
-                                var item2 = items[2];
-                                commandData.ribbonPanel.AddStackedItems(item0.button, item1.button, item2.button);
-                            }
-                            catch (Exception ex)
-                            {
-                            }
-                        }
-                        else if (items.Count() == 2)
-                        {
-                            try
-                            {
-                                var item0 = items[0];
-                                var item1 = items[1];
-                                commandData.ribbonPanel.AddStackedItems(item0.button, item1.button);
-                            }
-                            catch (Exception ex)
-                            {
-                            }
-                        }
-                    }
+                    var item0 = items[0];
+                    var item1 = items[1];
+                    commandData.RibbonPanel.AddStackedItems(item0.Button, item1.Button);
+                }
+                catch (Exception)
+                {
+                    // ignored
                 }
             }
         }
 
-        private static List<RibbonCommandData> BuildCommandDataStructure(IRibbonManager ribbonManager, IEnumerable<Type> ribbonCommands, RibbonCommandConfiguration ribbonConfig)
+        private static List<RibbonCommandData> BuildCommandDataStructure(IRibbonManager ribbonManager,
+            IEnumerable<Type> ribbonCommands, RibbonCommandConfiguration ribbonConfig)
         {
             var commandAttrType = typeof(IRibbonCommandAttribute);
             var ribbonCommandDataList = new List<RibbonCommandData>();
 
             ribbonManager.CreateTab(ribbonConfig.TabName);
-            var panelsToCreate = ribbonConfig.panels.Distinct();
+            var panelsToCreate = ribbonConfig.Panels.Distinct();
             foreach (var panelToCreate in panelsToCreate)
             {
                 ribbonManager.CreatePanel(ribbonConfig.TabName, panelToCreate);
@@ -154,7 +180,8 @@ namespace Revit.DependencyInjection.RibbonCommands
 
             foreach (var commandType in ribbonCommands)
             {
-                foreach (var attr in commandType.GetCustomAttributes().Where(a => a.GetType().GetInterfaces().Contains(commandAttrType)))
+                foreach (var attr in commandType.GetCustomAttributes()
+                             .Where(a => a.GetType().GetInterfaces().Contains(commandAttrType)))
                 {
                     var commandAttr = attr as IRibbonCommandAttribute;
                     var panel = CreatePanelIfNeeded(commandAttr, ribbonManager, ribbonConfig, panels);
@@ -170,41 +197,33 @@ namespace Revit.DependencyInjection.RibbonCommands
 
                     ribbonCommandDataList.Add(new RibbonCommandData
                     {
-                        button = buttonData,
-                        commandAttribute = commandAttr,
-                        ribbonPanel = panel
+                        Button = buttonData,
+                        CommandAttribute = commandAttr,
+                        RibbonPanel = panel
                     });
                 }
             }
 
-            ribbonCommandDataList = ribbonCommandDataList.OrderByDescending(c => c.commandAttribute.PanelPriority).ToList();
+            ribbonCommandDataList =
+                ribbonCommandDataList.OrderByDescending(c => c.CommandAttribute.PanelPriority).ToList();
             return ribbonCommandDataList;
         }
 
-        private static RibbonPanel CreatePanelIfNeeded(IRibbonCommandAttribute commandAttr, IRibbonManager ribbonManager, RibbonCommandConfiguration ribbonConfig, List<RibbonPanel> panels)
+        private static RibbonPanel CreatePanelIfNeeded(IRibbonCommandAttribute commandAttr,
+            IRibbonManager ribbonManager, RibbonCommandConfiguration ribbonConfig, List<RibbonPanel> panels)
         {
-            string panelName = string.Empty;
-            if (!string.IsNullOrWhiteSpace(commandAttr.PanelName))
-            {
-                panelName = commandAttr.PanelName;
-            }
-            else
-            {
-                panelName = ribbonConfig.DefaultPanelName;
-            }
-
+            var panelName = !string.IsNullOrWhiteSpace(commandAttr.PanelName) ? commandAttr.PanelName : ribbonConfig.DefaultPanelName;
             var panel = panels.FirstOrDefault(p => p.Name == panelName);
-            if (panel == null)
-            {
-                var panelManager = ribbonManager.CreatePanel(ribbonConfig.TabName, panelName);
-                panel = panelManager.GetPanel();
-                panels.Add(panel);
-            }
+            if (panel != null) return panel;
+            var panelManager = ribbonManager.CreatePanel(ribbonConfig.TabName, panelName);
+            panel = panelManager.GetPanel();
+            panels.Add(panel);
 
             return panel;
         }
 
-        private static string GetPushButtonName(IRibbonCommandAttribute commandAttr, IRibbonManager ribbonManager, Type commandType)
+        private static string GetPushButtonName(IRibbonCommandAttribute commandAttr, IRibbonManager ribbonManager,
+            Type commandType)
         {
             var br = ribbonManager.GetLineBreak();
 
@@ -225,15 +244,18 @@ namespace Revit.DependencyInjection.RibbonCommands
             return buttonName;
         }
 
-        private static PushButtonData CreatePushButtonData(IRibbonCommandAttribute commandAttr, string buttonName, Type commandType)
+        private static PushButtonData CreatePushButtonData(IRibbonCommandAttribute commandAttr, string buttonName,
+            Type commandType)
         {
             try
             {
-                var buttonData = ribbonHelpers.CreatePushButtonData(buttonName, commandAttr.Image, commandType, commandAttr.Tooltip, commandAttr.Description);
+                var buttonData = RibbonHelpers.CreatePushButtonData(buttonName, commandAttr.Image, commandType,
+                    commandAttr.Tooltip, commandAttr.Description);
                 if (commandAttr.Availability != null)
                 {
                     buttonData.AvailabilityClassName = commandAttr.Availability.FullName;
                 }
+
                 return buttonData;
             }
             catch

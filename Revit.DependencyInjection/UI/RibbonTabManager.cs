@@ -7,18 +7,18 @@ namespace Revit.DependencyInjection.UI
     /// </summary>
     public class RibbonTabManager : IRibbonTabManager
     {
-        private readonly UIControlledApplication app;
-        private readonly string tabName;
-        private readonly ImageManager imageManager;
+        private readonly UIControlledApplication _app;
+        private readonly string _tabName;
+        private readonly ImageManager _imageManager;
 
         /// <summary>
         /// Ribbon Manager will help you create Tabs, Panels and Buttons in Revit
         /// </summary>
         public RibbonTabManager(UIControlledApplication app, string tabName, ImageManager imageManager)
         {
-            this.app = app;
-            this.tabName = tabName;
-            this.imageManager = imageManager;
+            _app = app;
+            _tabName = tabName;
+            _imageManager = imageManager;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public string GetTabName()
         {
-            return this.tabName;
+            return _tabName;
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public IRibbonPanelManager CreatePanel(string panelName)
         {
-            var panel = app.CreateRibbonPanel(panelName);
-            var itembuilder = new RibbonPanelManager(this.tabName, panel, this.imageManager);
+            var panel = _app.CreateRibbonPanel(panelName);
+            var itembuilder = new RibbonPanelManager(_tabName, panel, _imageManager);
             return itembuilder;
         }
     }

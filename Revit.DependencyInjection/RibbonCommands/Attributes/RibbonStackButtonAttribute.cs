@@ -49,9 +49,9 @@ namespace Revit.DependencyInjection.RibbonCommands.Attributes
         /// </summary>
         public int StackGroupPriority { get; set; }
 
-        public RibbonStackButtonAttribute(string stackbuttonGroup)
+        public RibbonStackButtonAttribute(string stackButtonGroup)
         {
-            StackButtonGroup = stackbuttonGroup;
+            StackButtonGroup = stackButtonGroup;
         }
     }
 }

@@ -22,36 +22,28 @@ namespace Revit.DependencyInjection.Applications
             var containerGuid = ContainerProviderReflector.GetContainerGuid(this);
 
             var container = new TContainer();
-            this.InjectContainerToItself(container);
+            InjectContainerToItself(container);
 
-            this.HookUpContainer(container, containerGuid);
-            this.HookupRevitContext(application, container);
-            this.AddRevitUI(container, application);
+            HookUpContainer(container, containerGuid);
+            HookupRevitContext(application, container);
+            AddRevitUI(container, application);
 
             container.AddRevitCommandGuardConditions();
             container.AddRevitCommandErrorHandling<EmptyRevitCommandErrorHandler>();
 
-            try
+            // Calls the client's Startup
+            var result = OnStartup(container, application);
+            if (result != Result.Succeeded)
             {
-                // Calls the client's Startup
-                var result = this.OnStartup(container, application);
-                if (result != Result.Succeeded)
-                {
-                    return result;
-                }
-
-                // Calls the client's CreateRibbon
-                var imageManager = new ImageManager();
-                var ribbonManager = new RibbonManager(application, imageManager);
-                this.OnCreateRibbon(ribbonManager);
-
                 return result;
             }
-            catch
-            {
-                // If an exception the client's code, throw the exception to the stack
-                throw;
-            }
+
+            // Calls the client's CreateRibbon
+            var imageManager = new ImageManager();
+            var ribbonManager = new RibbonManager(application, imageManager);
+            OnCreateRibbon(ribbonManager);
+
+            return result;
         }
 
         /// <summary>
@@ -65,24 +57,19 @@ namespace Revit.DependencyInjection.Applications
         public Result OnShutdown(UIControlledApplication application)
         {
             var containerGuid = ContainerProviderReflector.GetContainerGuid(this);
-            var container = containers[containerGuid];
+            var container = Containers[containerGuid];
 
             try
             {
                 // Unhooks the events
-                this.UnhookRevitContext(application, containerGuid);
-                // Calls the client's Shotdown
-                return this.OnShutdown(container, application);
-            }
-            catch
-            {
-                // If anything goes wrong with the client's code, throw the exception to the stack
-                throw;
+                UnhookRevitContext(application, containerGuid);
+                // Calls the client's Shutdown
+                return OnShutdown(container, application);
             }
             finally
             {
                 // Unhooks and cleans the container even if an exception is thrown
-                this.UnhookContainer(containerGuid, container);
+                UnhookContainer(containerGuid, container);
             }
         }
 

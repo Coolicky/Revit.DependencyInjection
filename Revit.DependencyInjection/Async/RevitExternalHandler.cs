@@ -10,30 +10,30 @@ using Revit.DependencyInjection.Base;
 namespace Revit.DependencyInjection.Async
 {
     /// <summary>
-    /// Provides a way to run asyncronous taks on Revit's main thread
+    /// Provides a way to run asynchronous tasks on Revit's main thread
     /// </summary>
     public class RevitExternalHandler : IRevitEventHandler
     {
-        private readonly string name;
-        private readonly ExternalEvent externalEvent;
-        private readonly IDictionary<Task, FuncTask> queue = new ConcurrentDictionary<Task, FuncTask>();
-        private readonly IRevitContext revitContext;
-        private object contextResult;
+        private readonly string _name;
+        private readonly ExternalEvent _externalEvent;
+        private readonly IDictionary<Task, FuncTask> _queue = new ConcurrentDictionary<Task, FuncTask>();
+        private readonly IRevitContext _revitContext;
+        private object _contextResult;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RevitExternalHandler(RevitAsyncSettings settings, IRevitContext revitContext)
         {
-            this.revitContext = revitContext;
-            this.name = settings.Name;
+            _revitContext = revitContext;
+            _name = settings.Name;
             if (settings.IsJournalable)
             {
-                this.externalEvent = ExternalEvent.CreateJournalable(this);
+                _externalEvent = ExternalEvent.CreateJournalable(this);
             }
             else
             {
-                this.externalEvent = ExternalEvent.Create(this);
+                _externalEvent = ExternalEvent.Create(this);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public void CancelAll()
         {
-            this.queue.Clear();
+            _queue.Clear();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public int GetQueueCount()
         {
-            return this.queue.Count();
+            return _queue.Count();
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public void Execute(UIApplication app)
         {
-            if (queue.Any())
+            if (_queue.Any())
             {
-                var actionKey = queue.First();
+                var actionKey = _queue.First();
                 var taskKey = actionKey.Key;
 
                 if (actionKey.Value.DelegateType == DelegateType.Action)
@@ -83,13 +83,9 @@ namespace Revit.DependencyInjection.Async
                     actionKey.Value.Action?.DynamicInvoke(app);
                 }
             }
-            catch
-            {
-                throw;
-            }
             finally
             {
-                queue.Remove(actionKey.Key);
+                _queue.Remove(actionKey.Key);
                 actionKey.Key.RunSynchronously();
             }
         }
@@ -100,18 +96,14 @@ namespace Revit.DependencyInjection.Async
             {
                 if (!taskKey.IsCanceled)
                 {
-                    this.contextResult = actionKey.Value.Action?.DynamicInvoke(app);
+                    _contextResult = actionKey.Value.Action?.DynamicInvoke(app);
                 }
-            }
-            catch
-            {
-                throw;
             }
             finally
             {
-                queue.Remove(actionKey.Key);
+                _queue.Remove(actionKey.Key);
                 actionKey.Key.RunSynchronously();
-                this.contextResult = null;
+                _contextResult = null;
             }
         }
 
@@ -120,7 +112,7 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public string GetName()
         {
-            return name;
+            return _name;
         }
 
         /// <summary>
@@ -128,9 +120,9 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public async Task RunAsync(Action<UIApplication> action, CancellationTokenSource cancelSource = null)
         {
-            if (revitContext.IsInRevitContext())
+            if (_revitContext.IsInRevitContext())
             {
-                var app = revitContext.GetUIApplication();
+                var app = _revitContext.GetUIApplication();
                 action?.Invoke(app);
                 return;
             }
@@ -151,8 +143,8 @@ namespace Revit.DependencyInjection.Async
                 return;
             }
 
-            queue.Add(task, new FuncTask { Action = action, Cancellation = tokenSource });
-            externalEvent.Raise();
+            _queue.Add(task, new FuncTask { Action = action, Cancellation = tokenSource });
+            _externalEvent.Raise();
             await task;
         }
 
@@ -161,9 +153,9 @@ namespace Revit.DependencyInjection.Async
         /// </summary>
         public async Task<T> RunAsync<T>(Func<UIApplication, T> action, CancellationTokenSource cancelSource = null)
         {
-            if (revitContext.IsInRevitContext())
+            if (_revitContext.IsInRevitContext())
             {
-                var app = revitContext.GetUIApplication();
+                var app = _revitContext.GetUIApplication();
                 var result = action.Invoke(app);
                 return result;
             }
@@ -185,8 +177,8 @@ namespace Revit.DependencyInjection.Async
             }
 
             var funcTask = new FuncTask { Action = action, Cancellation = tokenSource, DelegateType = DelegateType.Func };
-            queue.Add(task, funcTask);
-            externalEvent.Raise();
+            _queue.Add(task, funcTask);
+            _externalEvent.Raise();
 
             var asyncResult = await task;
             return (T)asyncResult;
@@ -198,7 +190,7 @@ namespace Revit.DependencyInjection.Async
 
         private object DummyFunc()
         {
-            return this.contextResult;
+            return _contextResult;
         }
     }
 }

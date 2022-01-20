@@ -13,65 +13,61 @@ namespace Revit.DependencyInjection.Commands.Guards
     
     public class RevitCommandGuardChecker : IRevitCommandGuardChecker
     {
-        private readonly Dictionary<Type, List<Predicate<ICommandInfo>>> commandConditions;
+        private readonly Dictionary<Type, List<Predicate<ICommandInfo>>> _commandConditions;
 
         public RevitCommandGuardChecker()
         {
-            commandConditions = new Dictionary<Type, List<Predicate<ICommandInfo>>>();
+            _commandConditions = new Dictionary<Type, List<Predicate<ICommandInfo>>>();
         }
 
         public bool CanExecute(ICommandInfo commandInfo)
         {
             var commandType = commandInfo.GetCommandType();
-            var container = commandInfo.GetContainer();
-            var commandData = commandInfo.GetCommandData();
 
-            // Loop through all RevitCommandGuardAttributes to see if we can run the command
-            var guardAttrType = typeof(CommandGuardAttribute);
-            var attributes = commandType.GetCustomAttributes().Where(a => a.GetType() == guardAttrType);
-            if (attributes.Any())
-            {
-                var methodInfo = guardAttrType.GetMethod(nameof(CommandGuardAttribute.GetCommandGuardType));
-                foreach (var attribute in attributes)
-                {
-                    var guardType = methodInfo.Invoke(attribute, null) as Type;
-
-                    if (guardType != null)
-                    {
-                        var guard = Activator.CreateInstance(guardType) as IRevitCommandGuard;
-                        if (guard != null)
-                        {
-                            if (!guard.CanExecute(commandInfo))
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
+            if (!CheckCommandGuardAttributesIfCommandCanExecute(commandInfo, commandType)) return false;
 
             var ignoreConditionsType = typeof(IgnoreCommandGuardConditionsAttribute);
             var attributeData = commandType.CustomAttributes;
 
-            // If IgnoreConditions is added to the command, we wont check contions, just allow the command to run
+            // If IgnoreConditions is added to the command, we wont check conditions, just allow the command to run
             if (attributeData.Any(a => a.AttributeType == ignoreConditionsType))
             {
                 return true;
             }
 
             // Loop through all conditions to see if we can run the command
-            if (commandConditions.ContainsKey(commandType))
+            if (!_commandConditions.ContainsKey(commandType)) return true;
+            var conditions = _commandConditions[commandType];
+            foreach (var condition in conditions)
             {
-                var conditions = commandConditions[commandType];
-                foreach (var condition in conditions)
+                var canExecute = condition.Invoke(commandInfo);
+                if (!canExecute)
                 {
-                    var canExecute = condition.Invoke(commandInfo);
-                    if (!canExecute)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-                return true;
+            }
+            return true;
+        }
+
+        private static bool CheckCommandGuardAttributesIfCommandCanExecute(ICommandInfo commandInfo, MemberInfo commandType)
+        {
+            // Loop through all RevitCommandGuardAttributes to see if we can run the command
+            var guardAttrType = typeof(CommandGuardAttribute);
+            var attributes = commandType
+                .GetCustomAttributes()
+                .Where(a => a.GetType() == guardAttrType)
+                .ToList();
+            if (!attributes.Any()) return true;
+            var methodInfo = guardAttrType.GetMethod(nameof(CommandGuardAttribute.GetCommandGuardType));
+            foreach (var attribute in attributes)
+            {
+                if (methodInfo == null) continue;
+                if (!(methodInfo.Invoke(attribute, null) is Type guardType)) continue;
+                if (!(Activator.CreateInstance(guardType) is IRevitCommandGuard guard)) continue;
+                if (!guard.CanExecute(commandInfo))
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -79,14 +75,14 @@ namespace Revit.DependencyInjection.Commands.Guards
 
         internal void AddCommandTypeCondition(Type commandType, Predicate<ICommandInfo> predicate)
         {
-            if (commandConditions.ContainsKey(commandType))
+            if (_commandConditions.ContainsKey(commandType))
             {
-                var commandCondition = commandConditions[commandType];
+                var commandCondition = _commandConditions[commandType];
                 commandCondition.Add(predicate);
             }
             else
             {
-                commandConditions.Add(commandType, new List<Predicate<ICommandInfo>> { predicate });
+                _commandConditions.Add(commandType, new List<Predicate<ICommandInfo>> { predicate });
             }
         }
     }

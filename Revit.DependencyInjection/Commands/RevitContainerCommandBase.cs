@@ -10,7 +10,7 @@ using Unity;
 namespace Revit.DependencyInjection.Commands
 {
     /// <summary>
-    /// An indepentend Revit Command that will create a new container instance and use it during the command runtime. Use this when an ExternalApplication is not necessary.
+    /// An independent Revit Command that will create a new container instance and use it during the command runtime. Use this when an ExternalApplication is not necessary.
     /// <br>It uses a Container Pipeline to compose the container.</br>
     /// <br>After the command finishes the container will be disposed.</br>
     /// </summary>
@@ -24,16 +24,16 @@ namespace Revit.DependencyInjection.Commands
         /// </summary>
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
-            var commandType = this.GetType();
+            var commandType = GetType();
 
             var pipeline = new TContainerPipeline();
             var container = new TContainer();
             var application = commandData.Application;
 
-            this.InjectContainerToItself(container);
+            InjectContainerToItself(container);
 
-            this.HookupRevitContext(application, container);
-            this.AddRevitUI(container, application);
+            HookupRevitContext(application, container);
+            AddRevitUI(container, application);
 
             // Add Default Guard Conditions and Error Handling before piping
             container.AddRevitCommandGuardConditions();
@@ -51,7 +51,7 @@ namespace Revit.DependencyInjection.Commands
                 if (commandGuardChecker.CanExecute(commandInfo))
                 {
                     // Runs the users Execute command
-                    return this.Execute(newContainer, commandData, ref message, elements);
+                    return Execute(newContainer, commandData, ref message, elements);
                 }
                 else
                 {
@@ -70,20 +70,21 @@ namespace Revit.DependencyInjection.Commands
                 }
                 else
                 {
-                    // If the hanlder handles the exception, the command will return succeeded
+                    // If the handler handles the exception, the command will return succeeded
                     return Result.Succeeded;
                 }
             }
             finally
             {
-                this.UnhookRevitContext(application, container);
+                UnhookRevitContext(application, container);
                 // Safely calls lifecycle hook 
                 try
                 {
-                    this.OnDestroy(newContainer);
+                    OnDestroy(newContainer);
                 }
                 catch
                 {
+                    // ignored
                 }
 
                 // Cleans up the container

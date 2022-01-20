@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
 namespace Revit.DependencyInjection.Async
 {
     /// <summary>
-    /// Provides a way to run asyncronous taks on Revit's main thread
+    /// Provides a way to run asynchronous tasks on Revit's main thread
     /// </summary>
     public interface IRevitEventHandler : IExternalEventHandler
     {

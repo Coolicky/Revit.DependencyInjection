@@ -7,12 +7,12 @@ namespace Revit.DependencyInjection.Base
     /// <summary>
     /// Helper class to locate the container Guid belonging to an app
     /// </summary>
-    static internal class ContainerProviderReflector
+    internal static class ContainerProviderReflector
     {
         /// <summary>
         /// Locates the container guid passing in an instance of an app
         /// </summary>
-        static internal string GetContainerGuid(RevitContainerProviderBase target)
+        internal static string GetContainerGuid(RevitContainerProviderBase target)
         {
             var type = target.GetType();
             var containerGuid = GetContainerGuid(type);
@@ -22,7 +22,7 @@ namespace Revit.DependencyInjection.Base
         /// <summary>
         /// Locates the container guid passing in a type of an app
         /// </summary>
-        static internal string GetContainerGuid(Type appType)
+        internal static string GetContainerGuid(Type appType)
         {
             var attribute = GetContainerAttribute(appType);
             var containerGuid = GetContainerAttributeGuid(attribute);
@@ -30,7 +30,7 @@ namespace Revit.DependencyInjection.Base
             return containerGuid;
         }
 
-        static private object GetContainerAttribute(Type appType)
+        private static object GetContainerAttribute(Type appType)
         {
             var attributes = appType.GetCustomAttributes(typeof(ContainerProviderAttribute), false);
             var attribute = attributes.ElementAtOrDefault(0);
@@ -42,7 +42,7 @@ namespace Revit.DependencyInjection.Base
             return attribute;
         }
 
-        static private string GetContainerAttributeGuid(object attribute)
+        private static string GetContainerAttributeGuid(object attribute)
         {
             var containerProviderType = attribute.GetType();
             var containerGuidProperty = containerProviderType.GetProperty(nameof(ContainerProviderAttribute.ContainerGuid));

@@ -7,16 +7,16 @@ namespace Revit.DependencyInjection.UI
     /// </summary>
     public class RibbonManager : IRibbonManager
     {
-        private readonly UIControlledApplication app;
-        private readonly ImageManager imageManager;
+        private readonly UIControlledApplication _app;
+        private readonly ImageManager _imageManager;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RibbonManager(UIControlledApplication app, ImageManager imageManager)
         {
-            this.app = app;
-            this.imageManager = imageManager;
+            _app = app;
+            _imageManager = imageManager;
         }
 
         /// <summary>
@@ -26,13 +26,14 @@ namespace Revit.DependencyInjection.UI
         {
             try
             {
-                this.app.CreateRibbonTab(name);
+                _app.CreateRibbonTab(name);
             }
             catch
             {
+                // ignored
             }
 
-            return new RibbonTabManager(this.app, name, this.imageManager);
+            return new RibbonTabManager(_app, name, _imageManager);
         }
 
         /// <summary>
@@ -40,9 +41,9 @@ namespace Revit.DependencyInjection.UI
         /// </summary>
         public IRibbonPanelManager CreatePanel(string panelName)
         {
-            var panel = this.app.CreateRibbonPanel(panelName);
-            var itembuilder = new RibbonPanelManager(null, panel, this.imageManager);
-            return itembuilder;
+            var panel = _app.CreateRibbonPanel(panelName);
+            var itemBuilder = new RibbonPanelManager(null, panel, _imageManager);
+            return itemBuilder;
         }
 
         /// <summary>
@@ -52,15 +53,16 @@ namespace Revit.DependencyInjection.UI
         {
             try
             {
-                this.app.CreateRibbonTab(tabName);
+                _app.CreateRibbonTab(tabName);
             }
             catch
             {
+                // ignored
             }
 
-            var panel = this.app.CreateRibbonPanel(tabName, panelName);
-            var itembuilder = new RibbonPanelManager(tabName, panel, this.imageManager);
-            return itembuilder;
+            var panel = _app.CreateRibbonPanel(tabName, panelName);
+            var itemBuilder = new RibbonPanelManager(tabName, panel, _imageManager);
+            return itemBuilder;
         }
 
         /// <summary>
@@ -69,7 +71,7 @@ namespace Revit.DependencyInjection.UI
         /// <returns></returns>
         public UIControlledApplication GetApp()
         {
-            return this.app;
+            return _app;
         }
 
         /// <summary>

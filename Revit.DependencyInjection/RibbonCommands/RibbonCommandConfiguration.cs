@@ -7,7 +7,7 @@ namespace Revit.DependencyInjection.RibbonCommands
     /// </summary>
     public class RibbonCommandConfiguration
     {
-        internal List<string> panels;
+        internal List<string> Panels;
 
         /// <summary>
         /// The name of the tab on which the panels and buttons will be created.
@@ -21,7 +21,7 @@ namespace Revit.DependencyInjection.RibbonCommands
 
         public RibbonCommandConfiguration()
         {
-            panels = new List<string>();
+            Panels = new List<string>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Revit.DependencyInjection.RibbonCommands
         /// <param name="panelName"></param>
         public void AddPanel(string panelName)
         {
-            this.panels.Add(panelName);
+            Panels.Add(panelName);
         }
     }
 }
