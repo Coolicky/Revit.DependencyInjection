@@ -21,9 +21,9 @@ namespace Revit.SampleCommands
             var sampleTab = ribbonManager.CreateTab("Sample Tab");
             var samplePanel = ribbonManager.CreatePanel(sampleTab.GetTabName(), "Sample Panel");
             
-            samplePanel.AddPushButton<HelloWorldCommand, AvailableAlways>($"Hello{br}World");
-            samplePanel.AddPushButton<SampleInjectionCommand, AvailableOnProject>($"Get{br}Selection");
-            samplePanel.AddPushButton<SampleWindowCommand, AvailableOnProject>($"Show{br}Window");
+            samplePanel.AddPushButton<HelloWorldCommand, AvailableAlways>($"Hello{br}World", "hello");
+            samplePanel.AddPushButton<SampleInjectionCommand, AvailableOnProject>($"Get{br}Selection", "selection");
+            samplePanel.AddPushButton<SampleWindowCommand, AvailableOnProject>($"Show{br}Window", "window");
         }
 
         public override Result OnStartup(IUnityContainer container, UIControlledApplication application)

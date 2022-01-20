@@ -106,6 +106,13 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include=".template.config\template.json" />
+      <Content Include="Resources\RibbonImages\hello16.png" />
+      <Content Include="Resources\RibbonImages\hello32.png" />
+      <Content Include="Resources\RibbonImages\selection16.png" />
+      <Content Include="Resources\RibbonImages\selection32.png" />
+      <Content Include="Resources\RibbonImages\window16.png" />
+      <Content Include="Resources\RibbonImages\window32.png" />
       <Content Include="SampleCommands.addin">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>

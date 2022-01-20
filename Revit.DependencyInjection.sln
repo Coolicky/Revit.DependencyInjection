@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.DependencyInjection", "Revit.DependencyInjection\Revit.DependencyInjection.csproj", "{A5401D18-3A13-42BF-836E-90982C40AFC8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Revit.DependencyInjection.Unity", "Revit.DependencyInjection.Unity\Revit.DependencyInjection.Unity.csproj", "{A5401D18-3A13-42BF-836E-90982C40AFC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B853F4F8-B8D2-40C9-ADD0-0587F8326C72}"
 EndProject
