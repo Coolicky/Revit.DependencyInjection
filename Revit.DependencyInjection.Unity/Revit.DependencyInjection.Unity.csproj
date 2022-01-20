@@ -6,11 +6,11 @@
   <UseWpf>true</UseWpf>
   <Platforms>x64</Platforms>
   <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  <PackageVersion>0.6.0</PackageVersion>
+  <PackageVersion>0.6.2</PackageVersion>
   <Title>Revit Dependency Injection</Title>
   <Authors>Coolicky</Authors>
   <Description>Revit Dependency Injection Framework With Unity Container. Based on the excelent Onbox Framework.</Description>
-  <Copyright>Copyright ©  2022</Copyright>
+  <Copyright>Copyright © 2022</Copyright>
   <PackageLicenseExpression>MIT</PackageLicenseExpression>
   <PackageProjectUrl>https://github.com/Coolicky/Revit.DependencyInjection</PackageProjectUrl>
   <PackageIconUrl>https://raw.githubusercontent.com/Coolicky/Revit.DependencyInjection/master/Revit.DependencyInjection.Unity/Images/Revit.png</PackageIconUrl>
