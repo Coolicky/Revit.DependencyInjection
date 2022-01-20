@@ -96,9 +96,9 @@
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Revit.DependencyInjection\Revit.DependencyInjection.csproj">
+      <ProjectReference Include="..\Revit.DependencyInjection.Unity\Revit.DependencyInjection.Unity.csproj">
         <Project>{a5401d18-3a13-42bf-836e-90982c40afc8}</Project>
-        <Name>Revit.DependencyInjection</Name>
+        <Name>Revit.DependencyInjection.Unity</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>

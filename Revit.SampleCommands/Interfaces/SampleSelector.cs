@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using Revit.DependencyInjection.Async;
+using Revit.DependencyInjection.Unity.Async;
 
 namespace Revit.SampleCommands.Interfaces
 {

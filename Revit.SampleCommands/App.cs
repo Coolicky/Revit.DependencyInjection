@@ -1,8 +1,8 @@
 ﻿using Autodesk.Revit.UI;
-using Revit.DependencyInjection.Applications;
-using Revit.DependencyInjection.Async;
-using Revit.DependencyInjection.Base;
-using Revit.DependencyInjection.UI;
+using Revit.DependencyInjection.Unity.Applications;
+using Revit.DependencyInjection.Unity.Async;
+using Revit.DependencyInjection.Unity.Base;
+using Revit.DependencyInjection.Unity.UI;
 using Revit.SampleCommands.Commands.Availability;
 using Revit.SampleCommands.Commands.HelloWorld;
 using Revit.SampleCommands.Commands.SampleInjection;

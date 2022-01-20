@@ -1,5 +1,4 @@
-﻿using Revit.DependencyInjection.Abstractions;
-using Revit.SampleCommands.Commands.SampleViews.ViewModels;
+﻿using Revit.SampleCommands.Commands.SampleViews.ViewModels;
 using Revit.SampleCommands.Commands.SampleViews.Views;
 using Revit.SampleCommands.Interfaces;
 using Unity;
