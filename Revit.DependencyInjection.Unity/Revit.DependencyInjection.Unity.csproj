@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 <PropertyGroup>
-  <TargetFramework>net48</TargetFramework>
+  <TargetFrameworks>net47;net48</TargetFrameworks>
   <Configurations>Debug;Release</Configurations>
   <UseWpf>true</UseWpf>
   <Platforms>x64</Platforms>
   <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  <PackageVersion>0.6.2</PackageVersion>
+  <PackageVersion>0.6.3</PackageVersion>
   <Title>Revit Dependency Injection</Title>
   <Authors>Coolicky</Authors>
   <Description>Revit Dependency Injection Framework With Unity Container. Based on the excelent Onbox Framework.</Description>
@@ -17,9 +17,10 @@
   <RepositoryUrl>https://github.com/Coolicky/Revit.DependencyInjection</RepositoryUrl>
   <RepositoryType>Github</RepositoryType>
   <PackageTags>Revit, Di, Unity, .Net</PackageTags>
-  <PackageReleaseNotes>Inital Release</PackageReleaseNotes>
+  <PackageReleaseNotes>Updated to add net47 as target</PackageReleaseNotes>
+  <Version>0.6.3</Version>
 </PropertyGroup>
-
+  
 <ItemGroup>
   <PackageReference Include="Revit_All_Main_Versions_API_x64" Version="2020.0.1" />
   <PackageReference Include="Unity" Version="5.11.10" />
